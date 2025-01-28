@@ -1,6 +1,5 @@
 FROM mfisherman/openmpi:4.1.7 AS builder
 
-
 WORKDIR /app
 
 # build triton, copy data and config files
@@ -8,7 +7,7 @@ COPY --chmod=777 ./triton /app/triton
 
 RUN chdir /app/triton/src && mpic++ main.cpp -fopenmp -o /app/triton/build/triton.exe -DACTIVE_OMP
 
-RUN echo "cd /triton/build && mpirun -n 8 ./triton.exe ./input/cfg/case04.cfg " > /project/triton 
+RUN echo "cd /triton/build && mpirun --oversubscribe -np 8 ./triton.exe ./input/cfg/case03_short.cfg " > /project/triton
 
 # Make the script executable
 
