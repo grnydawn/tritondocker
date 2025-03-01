@@ -7,7 +7,7 @@ COPY --chmod=777 ./triton /app/triton
 
 RUN chdir /app/triton/src && mpic++ main.cpp -fopenmp -o /app/triton/build/triton.exe -DACTIVE_OMP
 
-RUN echo "cd /triton/build && mpirun --oversubscribe -np 8 ./triton.exe ./input/cfg/case03_short.cfg " > /project/triton
+RUN echo 'cd /triton/build && mpirun --oversubscribe -np 8 ./triton.exe "$@" ' > /project/triton
 
 # Make the script executable
 
