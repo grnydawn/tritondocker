@@ -1,17 +1,14 @@
-FROM mfisherman/openmpi:4.1.7 AS builder
+FROM mfisherman/mpich:4.2.3 AS builder
 
 WORKDIR /app
 
-# build triton, copy data and config files
 COPY --chmod=777 ./triton /app/triton
 
 RUN chdir /app/triton/src && mpic++ main.cpp -fopenmp -o /app/triton/build/triton.exe -DACTIVE_OMP
 
-RUN echo 'cd /triton/build && mpirun --oversubscribe -np 8 ./triton.exe "$@" ' > /project/triton
+RUN echo 'cd /triton/build && mpirun -np 8 ./triton.exe "$@" ' > /project/triton
 
-# Make the script executable
-
-FROM mfisherman/openmpi:4.1.7 AS runner
+FROM mfisherman/mpich:4.2.3 AS runner
 
 COPY --from=builder /app/triton /triton
 COPY --from=builder /project /project
